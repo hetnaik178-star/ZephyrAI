@@ -1,0 +1,969 @@
+/* =========================================
+   SOPHIE AI — Floating Assistant Widget
+   Premium Edition with Effects & Animations
+   ========================================= */
+
+/* ── Floating Bubble ── */
+.sophie-bubble {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ec4899, #8b5cf6);
+    border: none;
+    cursor: pointer;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: #fff;
+    box-shadow: 0 4px 20px rgba(236, 72, 153, 0.4), 0 0 40px rgba(139, 92, 246, 0.15);
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+    animation: sophie-breathe 3s ease-in-out infinite, sophie-bounce-in 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.sophie-bubble:hover {
+    transform: scale(1.12);
+    box-shadow: 0 6px 28px rgba(236, 72, 153, 0.55), 0 0 60px rgba(139, 92, 246, 0.25);
+}
+
+.sophie-bubble:active {
+    transform: scale(0.95);
+}
+
+.sophie-bubble.open {
+    animation: none;
+    transform: rotate(45deg) scale(1);
+}
+
+.sophie-bubble.open:hover {
+    transform: rotate(45deg) scale(1.08);
+}
+
+/* Pulse ring behind bubble */
+.sophie-bubble::before {
+    content: '';
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(236, 72, 153, 0.3), rgba(139, 92, 246, 0.3));
+    z-index: -1;
+    animation: sophie-pulse-ring 2.5s ease-in-out infinite;
+}
+
+/* Second outer ring for extra depth */
+.sophie-bubble::after {
+    content: '';
+    position: absolute;
+    inset: -14px;
+    border-radius: 50%;
+    border: 1px solid rgba(236, 72, 153, 0.15);
+    z-index: -1;
+    animation: sophie-outer-ring 4s ease-in-out infinite;
+}
+
+.sophie-bubble.open::before,
+.sophie-bubble.open::after {
+    animation: none;
+    opacity: 0;
+}
+
+@keyframes sophie-breathe {
+
+    0%,
+    100% {
+        box-shadow: 0 4px 20px rgba(236, 72, 153, 0.4), 0 0 40px rgba(139, 92, 246, 0.15);
+    }
+
+    50% {
+        box-shadow: 0 4px 28px rgba(236, 72, 153, 0.55), 0 0 55px rgba(139, 92, 246, 0.25);
+    }
+}
+
+@keyframes sophie-pulse-ring {
+
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 0.6;
+    }
+
+    50% {
+        transform: scale(1.25);
+        opacity: 0;
+    }
+}
+
+@keyframes sophie-outer-ring {
+
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 0.4;
+    }
+
+    50% {
+        transform: scale(1.5);
+        opacity: 0;
+    }
+}
+
+@keyframes sophie-bounce-in {
+    0% {
+        transform: scale(0) translateY(40px);
+        opacity: 0;
+    }
+
+    60% {
+        transform: scale(1.15) translateY(-5px);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+    }
+}
+
+/* ── Chat Panel ── */
+.sophie-panel {
+    position: fixed;
+    bottom: 100px;
+    right: 28px;
+    width: 390px;
+    height: 540px;
+    background: rgba(12, 10, 22, 0.96);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid transparent;
+    border-radius: 20px;
+    z-index: 9998;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.5),
+        0 0 80px rgba(236, 72, 153, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    /* Hidden by default */
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+    pointer-events: none;
+    transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+        transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ✨ Animated gradient border */
+.sophie-panel::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: 20px;
+    padding: 1px;
+    background: linear-gradient(var(--sophie-border-angle, 0deg),
+            rgba(236, 72, 153, 0.5),
+            rgba(139, 92, 246, 0.3),
+            rgba(6, 182, 212, 0.3),
+            rgba(236, 72, 153, 0.5));
+    -webkit-mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    z-index: -1;
+    animation: sophie-border-rotate 6s linear infinite;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.sophie-panel.open::before {
+    opacity: 1;
+}
+
+@keyframes sophie-border-rotate {
+    to {
+        --sophie-border-angle: 360deg;
+    }
+}
+
+/* Fallback for browsers not supporting @property */
+@supports not (background: paint(something)) {
+    .sophie-panel::before {
+        animation: sophie-border-fallback 6s linear infinite;
+    }
+
+    @keyframes sophie-border-fallback {
+        0% {
+            background: linear-gradient(0deg, rgba(236, 72, 153, 0.5), rgba(139, 92, 246, 0.3), rgba(6, 182, 212, 0.3), rgba(236, 72, 153, 0.5));
+        }
+
+        25% {
+            background: linear-gradient(90deg, rgba(236, 72, 153, 0.5), rgba(139, 92, 246, 0.3), rgba(6, 182, 212, 0.3), rgba(236, 72, 153, 0.5));
+        }
+
+        50% {
+            background: linear-gradient(180deg, rgba(236, 72, 153, 0.5), rgba(139, 92, 246, 0.3), rgba(6, 182, 212, 0.3), rgba(236, 72, 153, 0.5));
+        }
+
+        75% {
+            background: linear-gradient(270deg, rgba(236, 72, 153, 0.5), rgba(139, 92, 246, 0.3), rgba(6, 182, 212, 0.3), rgba(236, 72, 153, 0.5));
+        }
+
+        100% {
+            background: linear-gradient(360deg, rgba(236, 72, 153, 0.5), rgba(139, 92, 246, 0.3), rgba(6, 182, 212, 0.3), rgba(236, 72, 153, 0.5));
+        }
+    }
+}
+
+/* ✨ Ambient glow behind panel */
+.sophie-panel::after {
+    content: '';
+    position: absolute;
+    inset: -40px;
+    border-radius: 40px;
+    background: radial-gradient(ellipse at center,
+            rgba(236, 72, 153, 0.06) 0%,
+            rgba(139, 92, 246, 0.03) 40%,
+            transparent 70%);
+    z-index: -2;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    animation: sophie-ambient-pulse 4s ease-in-out infinite;
+}
+
+.sophie-panel.open::after {
+    opacity: 1;
+}
+
+@keyframes sophie-ambient-pulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 0.6;
+    }
+
+    50% {
+        transform: scale(1.05);
+        opacity: 1;
+    }
+}
+
+.sophie-panel.open {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+}
+
+/* ── Panel Header ── */
+.sophie-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    background: linear-gradient(135deg, rgba(236, 72, 153, 0.12), rgba(139, 92, 246, 0.08));
+    border-bottom: 1px solid rgba(236, 72, 153, 0.12);
+    flex-shrink: 0;
+    position: relative;
+    z-index: 2;
+}
+
+/* Shimmer sweep on header */
+.sophie-header::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(236, 72, 153, 0.06), transparent);
+    animation: sophie-shimmer 4s ease-in-out infinite;
+}
+
+@keyframes sophie-shimmer {
+    0% {
+        left: -100%;
+    }
+
+    50% {
+        left: 100%;
+    }
+
+    100% {
+        left: 100%;
+    }
+}
+
+.sophie-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ec4899, #a855f7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 17px;
+    box-shadow: 0 0 16px rgba(236, 72, 153, 0.3);
+    animation: sophie-avatar-glow 3s ease-in-out infinite;
+    position: relative;
+}
+
+/* Orbiting ring around avatar */
+.sophie-avatar::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    border: 1.5px solid transparent;
+    border-top-color: rgba(236, 72, 153, 0.5);
+    border-right-color: rgba(139, 92, 246, 0.3);
+    animation: sophie-avatar-orbit 3s linear infinite;
+}
+
+@keyframes sophie-avatar-orbit {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes sophie-avatar-glow {
+
+    0%,
+    100% {
+        box-shadow: 0 0 16px rgba(236, 72, 153, 0.3);
+    }
+
+    50% {
+        box-shadow: 0 0 24px rgba(236, 72, 153, 0.5), 0 0 40px rgba(139, 92, 246, 0.2);
+    }
+}
+
+.sophie-header-info {
+    flex: 1;
+}
+
+.sophie-header-name {
+    font-weight: 700;
+    font-size: 15px;
+    color: #f0f0ff;
+    letter-spacing: 0.3px;
+}
+
+.sophie-header-status {
+    font-size: 11px;
+    color: rgba(236, 72, 153, 0.8);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.sophie-status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #10b981;
+    box-shadow: 0 0 6px rgba(16, 185, 129, 0.5);
+    animation: sophie-status-pulse 2s ease-in-out infinite;
+}
+
+@keyframes sophie-status-pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.5;
+        transform: scale(0.8);
+    }
+}
+
+/* Header action buttons */
+.sophie-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.sophie-header-btn {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.35);
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    font-size: 14px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sophie-header-btn:hover {
+    color: #ec4899;
+    background: rgba(236, 72, 153, 0.1);
+}
+
+.sophie-header-btn.clear-btn:hover {
+    color: #f87171;
+    background: rgba(248, 113, 113, 0.1);
+}
+
+.sophie-header-close {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.35);
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    font-size: 16px;
+    line-height: 1;
+}
+
+.sophie-header-close:hover {
+    color: #ec4899;
+    background: rgba(236, 72, 153, 0.1);
+}
+
+/* ── Particle Canvas ── */
+.sophie-particles {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.85;
+}
+
+/* ── Messages Area ── */
+.sophie-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    position: relative;
+    z-index: 1;
+    scroll-behavior: smooth;
+}
+
+.sophie-messages::-webkit-scrollbar {
+    width: 4px;
+}
+
+.sophie-messages::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.sophie-messages::-webkit-scrollbar-thumb {
+    background: rgba(236, 72, 153, 0.2);
+    border-radius: 4px;
+}
+
+.sophie-messages::-webkit-scrollbar-thumb:hover {
+    background: rgba(236, 72, 153, 0.4);
+}
+
+/* ── Message Bubbles ── */
+.sophie-msg {
+    max-width: 85%;
+    animation: sophie-msg-in 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+}
+
+@keyframes sophie-msg-in {
+    from {
+        opacity: 0;
+        transform: translateY(10px) scale(0.97);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.sophie-msg.assistant {
+    align-self: flex-start;
+}
+
+.sophie-msg.user {
+    align-self: flex-end;
+}
+
+.sophie-msg-bubble {
+    padding: 10px 14px;
+    border-radius: 16px;
+    font-size: 13.5px;
+    line-height: 1.55;
+    word-wrap: break-word;
+    position: relative;
+}
+
+.sophie-msg.assistant .sophie-msg-bubble {
+    background: rgba(236, 72, 153, 0.08);
+    border: 1px solid rgba(236, 72, 153, 0.1);
+    border-bottom-left-radius: 4px;
+    color: #e8e0f0;
+}
+
+/* Subtle glow on sophie's messages */
+.sophie-msg.assistant .sophie-msg-bubble::after {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    background: linear-gradient(135deg, rgba(236, 72, 153, 0.05), transparent);
+    z-index: -1;
+    pointer-events: none;
+}
+
+.sophie-msg.user .sophie-msg-bubble {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.25), rgba(236, 72, 153, 0.15));
+    border: 1px solid rgba(139, 92, 246, 0.15);
+    border-bottom-right-radius: 4px;
+    color: #f0f0ff;
+}
+
+.sophie-msg-time {
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.25);
+    margin-top: 3px;
+    padding: 0 4px;
+}
+
+.sophie-msg.user .sophie-msg-time {
+    text-align: right;
+}
+
+/* Delete individual message */
+.sophie-msg-delete {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: rgba(248, 113, 113, 0.15);
+    border: 1px solid rgba(248, 113, 113, 0.2);
+    color: #f87171;
+    font-size: 10px;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    z-index: 5;
+    line-height: 1;
+}
+
+.sophie-msg:hover .sophie-msg-delete {
+    display: flex;
+}
+
+.sophie-msg-delete:hover {
+    background: rgba(248, 113, 113, 0.3);
+    transform: scale(1.15);
+}
+
+.sophie-msg.user .sophie-msg-delete {
+    right: auto;
+    left: -6px;
+}
+
+/* Links inside Sophie */
+.sophie-msg-bubble a {
+    color: #ec4899;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(236, 72, 153, 0.3);
+    transition: all 0.2s ease;
+}
+
+.sophie-msg-bubble a:hover {
+    color: #f472b6;
+    border-bottom-color: #f472b6;
+    text-shadow: 0 0 8px rgba(236, 72, 153, 0.2);
+}
+
+/* Bold & formatting */
+.sophie-msg-bubble strong {
+    color: #f0abfc;
+}
+
+.sophie-msg-bubble h3,
+.sophie-msg-bubble h4 {
+    color: #ec4899;
+    margin: 8px 0 4px;
+    font-size: 13px;
+}
+
+.sophie-msg-bubble ul,
+.sophie-msg-bubble ol {
+    margin: 4px 0;
+    padding-left: 18px;
+}
+
+.sophie-msg-bubble li {
+    margin-bottom: 2px;
+}
+
+/* ── Typing Indicator ── */
+.sophie-typing {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 10px 16px;
+    align-self: flex-start;
+    background: rgba(236, 72, 153, 0.06);
+    border-radius: 16px;
+    border-bottom-left-radius: 4px;
+}
+
+.sophie-typing-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #ec4899;
+    animation: sophie-typing-wave 1.4s ease-in-out infinite;
+}
+
+.sophie-typing-dot:nth-child(2) {
+    animation-delay: 0.15s;
+}
+
+.sophie-typing-dot:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+@keyframes sophie-typing-wave {
+
+    0%,
+    80%,
+    100% {
+        transform: scale(0.6) translateY(0);
+        opacity: 0.3;
+    }
+
+    40% {
+        transform: scale(1.1) translateY(-4px);
+        opacity: 1;
+    }
+}
+
+/* ── Input Area ── */
+.sophie-input-area {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 14px;
+    border-top: 1px solid rgba(236, 72, 153, 0.1);
+    background: rgba(15, 12, 25, 0.6);
+    flex-shrink: 0;
+    position: relative;
+    z-index: 2;
+}
+
+/* Glow line above input */
+.sophie-input-area::before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: 20%;
+    right: 20%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(236, 72, 153, 0.3), transparent);
+    animation: sophie-input-glow 3s ease-in-out infinite;
+}
+
+@keyframes sophie-input-glow {
+
+    0%,
+    100% {
+        opacity: 0.4;
+        left: 20%;
+        right: 20%;
+    }
+
+    50% {
+        opacity: 1;
+        left: 10%;
+        right: 10%;
+    }
+}
+
+.sophie-input {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(236, 72, 153, 0.1);
+    border-radius: 12px;
+    padding: 10px 14px;
+    color: #f0f0ff;
+    font-size: 13px;
+    font-family: inherit;
+    outline: none;
+    resize: none;
+    max-height: 80px;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+}
+
+.sophie-input::placeholder {
+    color: rgba(255, 255, 255, 0.22);
+}
+
+.sophie-input:focus {
+    border-color: rgba(236, 72, 153, 0.3);
+    box-shadow: 0 0 16px rgba(236, 72, 153, 0.08), inset 0 0 20px rgba(236, 72, 153, 0.03);
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.sophie-send {
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    border: none;
+    background: linear-gradient(135deg, #ec4899, #a855f7);
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Shine sweep on send button */
+.sophie-send::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg,
+            transparent 40%,
+            rgba(255, 255, 255, 0.15) 50%,
+            transparent 60%);
+    animation: sophie-send-shine 3s ease-in-out infinite;
+}
+
+@keyframes sophie-send-shine {
+    0% {
+        transform: translateX(-100%) translateY(-100%);
+    }
+
+    50% {
+        transform: translateX(100%) translateY(100%);
+    }
+
+    100% {
+        transform: translateX(100%) translateY(100%);
+    }
+}
+
+.sophie-send:hover {
+    transform: scale(1.08);
+    box-shadow: 0 4px 20px rgba(236, 72, 153, 0.35);
+}
+
+.sophie-send:active {
+    transform: scale(0.95);
+}
+
+.sophie-send svg {
+    width: 16px;
+    height: 16px;
+    position: relative;
+    z-index: 1;
+}
+
+/* ── Welcome State ── */
+.sophie-welcome {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 36px 24px;
+    gap: 10px;
+    flex: 1;
+    position: relative;
+    z-index: 1;
+}
+
+.sophie-welcome-icon {
+    font-size: 44px;
+    animation: sophie-wave 2s ease-in-out infinite;
+    filter: drop-shadow(0 0 12px rgba(236, 72, 153, 0.3));
+}
+
+@keyframes sophie-wave {
+
+    0%,
+    100% {
+        transform: rotate(0deg) scale(1);
+    }
+
+    25% {
+        transform: rotate(15deg) scale(1.05);
+    }
+
+    75% {
+        transform: rotate(-10deg) scale(1.02);
+    }
+}
+
+.sophie-welcome h3 {
+    color: #f0f0ff;
+    font-size: 18px;
+    font-weight: 700;
+    margin: 0;
+    background: linear-gradient(135deg, #f0f0ff, #ec4899);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.sophie-welcome p {
+    color: rgba(255, 255, 255, 0.45);
+    font-size: 13px;
+    margin: 0;
+    max-width: 260px;
+    line-height: 1.5;
+}
+
+/* Quick suggested prompts */
+.sophie-suggestions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    justify-content: center;
+    margin-top: 8px;
+}
+
+.sophie-suggestion {
+    background: rgba(236, 72, 153, 0.06);
+    border: 1px solid rgba(236, 72, 153, 0.12);
+    color: rgba(255, 255, 255, 0.6);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.sophie-suggestion::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(236, 72, 153, 0.1), rgba(139, 92, 246, 0.05));
+    opacity: 0;
+    transition: opacity 0.25s ease;
+}
+
+.sophie-suggestion:hover {
+    background: rgba(236, 72, 153, 0.12);
+    color: #ec4899;
+    border-color: rgba(236, 72, 153, 0.25);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(236, 72, 153, 0.1);
+}
+
+.sophie-suggestion:hover::before {
+    opacity: 1;
+}
+
+/* ── Clear Conversation Confirm ── */
+.sophie-clear-confirm {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 16px;
+    background: rgba(248, 113, 113, 0.06);
+    border-top: 1px solid rgba(248, 113, 113, 0.1);
+    animation: sophie-msg-in 0.25s ease;
+    position: relative;
+    z-index: 2;
+}
+
+.sophie-clear-confirm.show {
+    display: flex;
+}
+
+.sophie-clear-confirm span {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.sophie-clear-btn {
+    padding: 5px 14px;
+    border-radius: 8px;
+    border: none;
+    font-size: 12px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.sophie-clear-btn.confirm {
+    background: rgba(248, 113, 113, 0.15);
+    color: #f87171;
+    border: 1px solid rgba(248, 113, 113, 0.2);
+}
+
+.sophie-clear-btn.confirm:hover {
+    background: rgba(248, 113, 113, 0.25);
+}
+
+.sophie-clear-btn.cancel {
+    background: rgba(255, 255, 255, 0.05);
+    color: rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.sophie-clear-btn.cancel:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* ── Responsive ── */
+@media (max-width: 480px) {
+    .sophie-panel {
+        right: 10px;
+        left: 10px;
+        bottom: 90px;
+        width: auto;
+        height: calc(100vh - 120px);
+        max-height: 600px;
+        border-radius: 16px;
+    }
+
+    .sophie-bubble {
+        bottom: 18px;
+        right: 18px;
+        width: 52px;
+        height: 52px;
+    }
+}
+
+/* ── CSS Custom Property for border rotation ── */
+@property --sophie-border-angle {
+    syntax: '<angle>';
+    initial-value: 0deg;
+    inherits: false;
+}

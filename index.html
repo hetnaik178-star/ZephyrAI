@@ -1,0 +1,1449 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="Zephyr AI - Your intelligent fashion assistant powered by AI. Get personalized style recommendations, analyze outfits, and discover trending fashion.">
+  <meta name="keywords" content="fashion AI, style assistant, outfit analyzer, fashion trends, personal stylist">
+  <title>Zephyr AI - Your Intelligent Fashion Assistant</title>
+  <link rel="stylesheet" href="index.css">
+  <link rel="stylesheet" href="sophie.css">
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+</head>
+
+<body>
+  <!-- Intro Video Splash -->
+  <div class="intro-splash" id="intro-splash">
+    <video id="intro-video" autoplay muted playsinline preload="auto">
+      <source src="Video/Videointro.mp4" type="video/mp4">
+      <source src="Video/intro.webm" type="video/webm">
+    </video>
+    <audio id="intro-audio" preload="auto">
+      <source src="Video/intro-sound.mp3" type="audio/mpeg">
+    </audio>
+    <button class="intro-skip" id="intro-skip">Skip ⟶</button>
+  </div>
+
+  <!-- Outro Video Overlay -->
+  <div class="outro-splash hidden" id="outro-splash">
+    <video id="outro-video" muted playsinline preload="auto">
+      <source src="Video/outro.mp4" type="video/mp4">
+    </video>
+    <audio id="outro-audio" preload="auto">
+      <source src="Video/outro.mp3" type="audio/mpeg">
+    </audio>
+    <div class="outro-text-overlay">
+      <div class="outro-tagline">Thank you for watching</div>
+      <div class="outro-brand">⚡ ZEPHYR AI</div>
+      <div class="outro-sub">Your Style, Elevated.</div>
+    </div>
+    <button class="intro-skip" id="outro-close">Close ✕</button>
+  </div>
+
+  <!-- Loading Screen -->
+  <div class="loading-screen" id="loading-screen">
+    <div class="loader-particles" id="loader-particles"></div>
+    <div class="loader-content">
+      <div class="loader-icon-wrapper">
+        <div class="loader-ring loader-ring-1"></div>
+        <div class="loader-ring loader-ring-2"></div>
+        <div class="loader-ring loader-ring-3"></div>
+        <div class="loader-logo">⚡</div>
+      </div>
+      <div class="loader-text">Zephyr AI</div>
+      <div class="loader-bar">
+        <div class="loader-progress"></div>
+      </div>
+      <div class="loader-status" id="loader-status">Initializing neural engine...</div>
+      <div class="loader-tagline">Your Style, Elevated</div>
+      <div class="loader-version">v2.0</div>
+    </div>
+  </div>
+
+  <!-- Futuristic Background Effects -->
+  <div class="cyber-grid"></div>
+  <div class="scan-lines"></div>
+  <div class="holo-orb holo-orb-1"></div>
+  <div class="holo-orb holo-orb-2"></div>
+
+  <div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="logo">
+          <div class="logo-icon">⚡</div>
+          <div>
+            <div class="logo-text">Zephyr AI</div>
+            <span class="logo-badge">Fashion</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar-content">
+        <div class="sidebar-section">
+          <button class="btn-new-chat" id="btn-new-chat" title="Start new conversation (Ctrl+N)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 5v14M5 12h14" />
+            </svg>
+            New Chat
+          </button>
+          <button class="btn-demo-mode" id="btn-presentation-demo" title="Load a professor-ready demo profile">
+            Presentation Demo
+          </button>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Quick Actions</div>
+          <nav class="sidebar-nav">
+            <button class="nav-item active" data-view="chat" id="nav-chat">
+              <svg class="nav-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+              </svg>
+              Chat with Zephyr
+            </button>
+            <button class="nav-item" data-view="upload" id="nav-upload">
+              <svg class="nav-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                <circle cx="8.5" cy="8.5" r="1.5" />
+                <polyline points="21 15 16 10 5 21" />
+              </svg>
+              Analyze Outfit
+            </button>
+            <button class="nav-item" data-view="trends" id="nav-trends">
+              <svg class="nav-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+              </svg>
+              Explore Trends
+            </button>
+            <button class="nav-item" data-view="profile" id="nav-profile">
+              <svg class="nav-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+              </svg>
+              My Profile
+            </button>
+            <button class="nav-item" data-view="dna" id="nav-dna">
+              <svg class="nav-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 14c4 0 4-8 8-8s4 8 8 8" />
+                <path d="M4 10c4 0 4 8 8 8s4-8 8-8" />
+                <path d="M8 7h8M8 17h8M10 12h4" />
+              </svg>
+              Style DNA
+            </button>
+            <button class="nav-item" data-view="fun" id="nav-fun">
+              <svg class="nav-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2l2.2 6.7H21l-5.5 4 2.1 6.8L12 15.4 6.4 19.5l2.1-6.8L3 8.7h6.8L12 2z" />
+              </svg>
+              Fun Zone
+            </button>
+            <button class="nav-item" data-view="levelup" id="nav-levelup">
+              <svg class="nav-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 20V4M12 4l-5 5M12 4l5 5" />
+                <path d="M5 20h14" />
+              </svg>
+              Level Up
+            </button>
+            <button class="nav-item" data-view="avatar" id="nav-avatar">
+              <svg class="nav-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="8" r="5" />
+                <path d="M3 21v-2a7 7 0 0 1 7-7h4a7 7 0 0 1 7 7v2" />
+                <circle cx="12" cy="8" r="2" fill="currentColor" opacity="0.3" />
+              </svg>
+              Avatar
+            </button>
+          </nav>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Recent Chats</div>
+          <nav class="sidebar-nav" id="chat-history">
+            <!-- Chat history items will be dynamically inserted here -->
+            <p style="padding: var(--space-3); color: var(--text-tertiary); font-size: var(--text-sm);">
+              No recent chats yet
+            </p>
+          </nav>
+        </div>
+
+        <!-- Daily Style Tip -->
+        <div class="sidebar-section">
+          <div class="daily-tip-card holo-card" id="daily-tip">
+            <div class="tip-header">
+              <span class="tip-icon">💡</span>
+              <span class="tip-label">Daily Style Tip</span>
+            </div>
+            <p class="tip-content" id="tip-content">Layer neutral tones with one bold accent piece for effortless
+              elegance.</p>
+            <button class="tip-action" id="btn-new-tip">✨ New Tip</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="api-status" id="api-status">
+          <span class="api-status-dot"></span>
+          <span id="api-status-text">Not configured</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Header -->
+      <header class="header">
+        <button class="btn-icon menu-toggle" id="menu-toggle" aria-label="Toggle menu">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12" />
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <line x1="3" y1="18" x2="21" y2="18" />
+          </svg>
+        </button>
+        <h1 class="header-title" id="header-title">Chat with Zephyr</h1>
+        <div class="header-actions">
+          <button class="outro-trigger" id="btn-outro" title="Play Outro">
+            <span class="outro-trigger-icon">🎬</span>
+            <span class="outro-trigger-text">Outro</span>
+          </button>
+          <button class="btn-icon" id="btn-settings" title="Settings">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="3" />
+              <path
+                d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <!-- Chat Container -->
+      <div class="chat-container" id="view-chat">
+        <div class="chat-messages" id="chat-messages">
+          <div class="chat-messages-inner" id="messages-inner">
+            <!-- Welcome Screen -->
+            <div class="welcome-screen" id="welcome-screen">
+              <div class="welcome-particles" id="welcome-particles"></div>
+              <div class="welcome-icon">⚡</div>
+              <h2 class="welcome-title glitch" data-text="Hello, I'm Zephyr">Hello, I'm Zephyr</h2>
+              <p class="welcome-subtitle">
+                Your AI-powered fashion companion. I can help you discover your style, analyze outfits,
+                and stay on top of the latest trends — all tailored to your preferences and budget.
+              </p>
+              <div class="ai-capabilities">
+                <span class="capability-tag">✨ Style Analysis</span>
+                <span class="capability-tag">🎨 Color Matching</span>
+                <span class="capability-tag">🛍️ Shopping Links</span>
+                <span class="capability-tag">📸 Image Analysis</span>
+              </div>
+              <div class="quick-actions stagger-in">
+                <button class="quick-action-card" data-prompt="Help me build a capsule wardrobe for spring">
+                  <div class="quick-action-icon">👔</div>
+                  <div class="quick-action-title">Build a Capsule Wardrobe</div>
+                  <div class="quick-action-desc">Create a versatile, minimal wardrobe</div>
+                </button>
+                <button class="quick-action-card" data-prompt="What colors suit my skin tone?">
+                  <div class="quick-action-icon">🎨</div>
+                  <div class="quick-action-title">Find My Colors</div>
+                  <div class="quick-action-desc">Discover your perfect color palette</div>
+                </button>
+                <button class="quick-action-card" data-prompt="What's trending in streetwear right now?">
+                  <div class="quick-action-icon">🔥</div>
+                  <div class="quick-action-title">Trending Now</div>
+                  <div class="quick-action-desc">Explore current fashion trends</div>
+                </button>
+                <button class="quick-action-card" data-prompt="Help me style an outfit for a job interview">
+                  <div class="quick-action-icon">💼</div>
+                  <div class="quick-action-title">Style for Occasion</div>
+                  <div class="quick-action-desc">Get outfit ideas for any event</div>
+                </button>
+              </div>
+              <div class="keyboard-hints">
+                <span class="kbd">Ctrl</span> + <span class="kbd">N</span> New Chat
+                <span class="divider">•</span>
+                <span class="kbd">Ctrl</span> + <span class="kbd">U</span> Upload
+                <span class="divider">•</span>
+                <span class="kbd">Enter</span> Send
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chat Input -->
+        <div class="chat-input-container">
+          <div class="chat-input-wrapper">
+            <!-- Quick Mood Chips -->
+            <div class="mood-chips" id="mood-chips">
+              <button class="mood-chip" data-mood="casual">😎 Casual</button>
+              <button class="mood-chip" data-mood="formal">👔 Formal</button>
+              <button class="mood-chip" data-mood="date">💕 Date Night</button>
+              <button class="mood-chip" data-mood="party">🎉 Party</button>
+              <button class="mood-chip" data-mood="cozy">🏡 Work from Home</button>
+              <button class="mood-chip" data-mood="sporty">🏃 Athleisure</button>
+            </div>
+            <div class="chat-input-box">
+              <div class="mode-container">
+                <button class="btn-mode" id="btn-mode" title="Switch conversation mode">
+                  <span class="mode-icon" id="mode-icon">💡</span>
+                </button>
+                <div class="mode-picker" id="mode-picker">
+                  <div class="mode-picker-header">Conversation Mode</div>
+                  <button class="mode-option active" data-mode="consultancy" id="mode-consultancy">
+                    <span class="mode-opt-icon">💡</span>
+                    <div class="mode-opt-info">
+                      <span class="mode-opt-name">Style Consultant</span>
+                      <span class="mode-opt-desc">Tips, advice & outfit inspiration</span>
+                    </div>
+                    <span class="mode-check">✓</span>
+                  </button>
+                  <button class="mode-option" data-mode="shopping" id="mode-shopping">
+                    <span class="mode-opt-icon">🛍️</span>
+                    <div class="mode-opt-info">
+                      <span class="mode-opt-name">Shopping Assistant</span>
+                      <span class="mode-opt-desc">Product links, prices & deals</span>
+                    </div>
+                    <span class="mode-check">✓</span>
+                  </button>
+                  <button class="mode-option" data-mode="trendsetter" id="mode-trendsetter">
+                    <span class="mode-opt-icon">🔥</span>
+                    <div class="mode-opt-info">
+                      <span class="mode-opt-name">Trendsetter</span>
+                      <span class="mode-opt-desc">What's hot, runway & street style</span>
+                    </div>
+                    <span class="mode-check">✓</span>
+                  </button>
+                </div>
+              </div>
+              <div class="emoji-container">
+                <button class="btn-emoji" id="btn-emoji" title="Add emoji">
+                  <span>😊</span>
+                </button>
+                <div class="emoji-picker" id="emoji-picker">
+                  <button data-emoji="👗">👗</button>
+                  <button data-emoji="👠">👠</button>
+                  <button data-emoji="👜">👜</button>
+                  <button data-emoji="💄">💄</button>
+                  <button data-emoji="💎">💎</button>
+                  <button data-emoji="🎀">🎀</button>
+                  <button data-emoji="✨">✨</button>
+                  <button data-emoji="🔥">🔥</button>
+                  <button data-emoji="💯">💯</button>
+                  <button data-emoji="💕">💕</button>
+                  <button data-emoji="🌟">🌟</button>
+                  <button data-emoji="👑">👑</button>
+                </div>
+              </div>
+              <textarea class="chat-input" id="chat-input" placeholder="Ask Zephyr about fashion, style, or trends..."
+                rows="1"></textarea>
+              <div class="chat-input-actions">
+                <div class="ai-status" id="ai-status">
+                  <div class="ai-status-dot"></div>
+                  <span>Ready</span>
+                </div>
+                <button class="btn-send" id="btn-send" title="Send message" disabled>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="22" y1="2" x2="11" y2="13" />
+                    <polygon points="22 2 15 22 11 13 2 9 22 2" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <div class="chat-input-footer">
+              <div class="footer-branding">
+                <span class="footer-logo-icon">⚡</span>
+                <span class="footer-brand-text">Powered by <strong>Zephyr AI</strong></span>
+                <span class="footer-divider"></span>
+                <span class="footer-tagline">Your Style, Elevated</span>
+              </div>
+              <span class="char-counter" id="char-counter">0 / 2000</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Upload View -->
+      <div class="chat-container hidden" id="view-upload">
+        <div class="chat-messages">
+          <div class="chat-messages-inner">
+            <div class="card" style="max-width: 600px; margin: 0 auto;">
+              <div class="card-header">
+                <div class="card-icon">📸</div>
+                <h2 class="card-title">Analyze Your Outfit</h2>
+              </div>
+              <div class="card-body">
+                <p style="margin-bottom: var(--space-5);">
+                  Upload a photo of your outfit and I'll analyze it — identifying pieces, suggesting improvements,
+                  and recommending complementary items that match your style and budget.
+                </p>
+                <div class="intent-panel">
+                  <div class="intent-header">
+                    <span class="intent-label">What should this outfit communicate?</span>
+                    <span class="intent-note">Intent-aware analysis</span>
+                  </div>
+                  <div class="intent-chips" id="outfit-intent-chips">
+                    <button class="intent-chip selected" data-intent="confident">Confident</button>
+                    <button class="intent-chip" data-intent="approachable">Approachable</button>
+                    <button class="intent-chip" data-intent="premium">Premium</button>
+                    <button class="intent-chip" data-intent="creative">Creative</button>
+                    <button class="intent-chip" data-intent="relaxed">Relaxed</button>
+                  </div>
+                </div>
+                <div class="upload-zone" id="upload-zone">
+                  <div class="upload-zone-icon">📷</div>
+                  <div class="upload-zone-title">Drop your image here</div>
+                  <div class="upload-zone-subtitle">or click to browse • PNG, JPG up to 10MB</div>
+                  <input type="file" id="file-input" accept="image/*" class="hidden">
+                </div>
+                <div class="upload-preview hidden" id="upload-preview">
+                  <div class="scan-overlay" id="scan-overlay">
+                    <div class="scan-corner tl"></div>
+                    <div class="scan-corner tr"></div>
+                    <div class="scan-corner bl"></div>
+                    <div class="scan-corner br"></div>
+                    <div class="scan-line" id="scan-line"></div>
+                    <div class="scan-grid"></div>
+                    <div class="scan-dots">
+                      <div class="scan-dot" style="top:20%;left:30%"></div>
+                      <div class="scan-dot" style="top:55%;left:70%"></div>
+                      <div class="scan-dot" style="top:75%;left:25%"></div>
+                    </div>
+                    <div class="scan-status" id="scan-status">SCANNING OUTFIT...</div>
+                  </div>
+                  <img id="preview-image" src="" alt="Outfit preview">
+                  <button class="upload-preview-remove" id="remove-preview" title="Remove image">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <line x1="18" y1="6" x2="6" y2="18" />
+                      <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
+                  </button>
+                </div>
+                <button class="btn btn-analyze-outfit mt-4 hidden" id="btn-analyze" style="width: 100%;">
+                  <span class="analyze-btn-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <circle cx="11" cy="11" r="8" />
+                      <path d="M21 21l-4.35-4.35" />
+                    </svg>
+                  </span>
+                  <span class="analyze-btn-text">Analyze Outfit</span>
+                  <span class="analyze-btn-glow"></span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Trends View -->
+      <div class="chat-container hidden" id="view-trends">
+        <div class="chat-messages">
+          <div class="chat-messages-inner">
+            <div class="card" style="max-width: 700px; margin: 0 auto;">
+              <div class="card-header">
+                <div class="card-icon">🔥</div>
+                <h2 class="card-title">Explore Fashion Trends</h2>
+              </div>
+              <div class="card-body">
+                <p style="margin-bottom: var(--space-5);">
+                  Discover what's trending in fashion right now. I search real-time sources to bring you the latest in
+                  style.
+                </p>
+                <div class="form-group">
+                  <label class="form-label">What trends are you interested in?</label>
+                  <div class="form-input-group">
+                    <input type="text" class="form-input" id="trend-query"
+                      placeholder="e.g., minimalist fashion, spring 2026, streetwear...">
+                    <button class="btn btn-primary" id="btn-search-trends">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2">
+                        <circle cx="11" cy="11" r="8" />
+                        <path d="M21 21l-4.35-4.35" />
+                      </svg>
+                      Search
+                    </button>
+                  </div>
+                </div>
+                <div class="form-checkbox-group" style="margin-bottom: var(--space-5);">
+                  <label class="form-checkbox">
+                    <input type="checkbox" name="trend-cat" value="streetwear">
+                    <span class="form-checkbox-label">Streetwear</span>
+                  </label>
+                  <label class="form-checkbox">
+                    <input type="checkbox" name="trend-cat" value="formal">
+                    <span class="form-checkbox-label">Formal</span>
+                  </label>
+                  <label class="form-checkbox">
+                    <input type="checkbox" name="trend-cat" value="casual">
+                    <span class="form-checkbox-label">Casual</span>
+                  </label>
+                  <label class="form-checkbox">
+                    <input type="checkbox" name="trend-cat" value="sustainable">
+                    <span class="form-checkbox-label">Sustainable</span>
+                  </label>
+                  <label class="form-checkbox">
+                    <input type="checkbox" name="trend-cat" value="luxury">
+                    <span class="form-checkbox-label">Luxury</span>
+                  </label>
+                </div>
+
+                <!-- Color Search Section -->
+                <div class="color-search-section" id="color-search-section">
+                  <div class="color-search-header">
+                    <span class="color-search-icon">🎨</span>
+                    <h3 class="color-search-title">Search by Color</h3>
+                    <p class="color-search-subtitle">Tap a color to discover trending fashion in that shade</p>
+                  </div>
+                  <div class="color-palette-grid" id="color-palette-grid">
+                    <button class="color-swatch" data-color="#000000" data-name="Black" title="Black">
+                      <span class="swatch-circle" style="background:#000000;"></span>
+                      <span class="swatch-label">Black</span>
+                    </button>
+                    <button class="color-swatch" data-color="#FFFFFF" data-name="White" title="White">
+                      <span class="swatch-circle" style="background:#FFFFFF; border:1px solid rgba(255,255,255,0.2);"></span>
+                      <span class="swatch-label">White</span>
+                    </button>
+                    <button class="color-swatch" data-color="#1B1F3B" data-name="Navy" title="Navy">
+                      <span class="swatch-circle" style="background:#1B1F3B;"></span>
+                      <span class="swatch-label">Navy</span>
+                    </button>
+                    <button class="color-swatch" data-color="#6B7280" data-name="Gray" title="Gray">
+                      <span class="swatch-circle" style="background:#6B7280;"></span>
+                      <span class="swatch-label">Gray</span>
+                    </button>
+                    <button class="color-swatch" data-color="#DC2626" data-name="Red" title="Red">
+                      <span class="swatch-circle" style="background:#DC2626;"></span>
+                      <span class="swatch-label">Red</span>
+                    </button>
+                    <button class="color-swatch" data-color="#7C2D12" data-name="Burgundy" title="Burgundy">
+                      <span class="swatch-circle" style="background:#7C2D12;"></span>
+                      <span class="swatch-label">Burgundy</span>
+                    </button>
+                    <button class="color-swatch" data-color="#EC4899" data-name="Pink" title="Pink">
+                      <span class="swatch-circle" style="background:#EC4899;"></span>
+                      <span class="swatch-label">Pink</span>
+                    </button>
+                    <button class="color-swatch" data-color="#8B5CF6" data-name="Purple" title="Purple">
+                      <span class="swatch-circle" style="background:#8B5CF6;"></span>
+                      <span class="swatch-label">Purple</span>
+                    </button>
+                    <button class="color-swatch" data-color="#2563EB" data-name="Blue" title="Blue">
+                      <span class="swatch-circle" style="background:#2563EB;"></span>
+                      <span class="swatch-label">Blue</span>
+                    </button>
+                    <button class="color-swatch" data-color="#0D9488" data-name="Teal" title="Teal">
+                      <span class="swatch-circle" style="background:#0D9488;"></span>
+                      <span class="swatch-label">Teal</span>
+                    </button>
+                    <button class="color-swatch" data-color="#16A34A" data-name="Green" title="Green">
+                      <span class="swatch-circle" style="background:#16A34A;"></span>
+                      <span class="swatch-label">Green</span>
+                    </button>
+                    <button class="color-swatch" data-color="#65A30D" data-name="Olive" title="Olive">
+                      <span class="swatch-circle" style="background:#65A30D;"></span>
+                      <span class="swatch-label">Olive</span>
+                    </button>
+                    <button class="color-swatch" data-color="#F59E0B" data-name="Gold" title="Gold">
+                      <span class="swatch-circle" style="background:#F59E0B;"></span>
+                      <span class="swatch-label">Gold</span>
+                    </button>
+                    <button class="color-swatch" data-color="#EA580C" data-name="Orange" title="Orange">
+                      <span class="swatch-circle" style="background:#EA580C;"></span>
+                      <span class="swatch-label">Orange</span>
+                    </button>
+                    <button class="color-swatch" data-color="#D2B48C" data-name="Beige" title="Beige">
+                      <span class="swatch-circle" style="background:#D2B48C;"></span>
+                      <span class="swatch-label">Beige</span>
+                    </button>
+                    <button class="color-swatch" data-color="#92400E" data-name="Brown" title="Brown">
+                      <span class="swatch-circle" style="background:#92400E;"></span>
+                      <span class="swatch-label">Brown</span>
+                    </button>
+                    <button class="color-swatch" data-color="#F0ABFC" data-name="Pastel" title="Pastel">
+                      <span class="swatch-circle" style="background: linear-gradient(135deg, #F0ABFC, #93C5FD, #A7F3D0);"></span>
+                      <span class="swatch-label">Pastel</span>
+                    </button>
+                    <button class="color-swatch" data-color="#F97316" data-name="Coral" title="Coral">
+                      <span class="swatch-circle" style="background:#FF6F61;"></span>
+                      <span class="swatch-label">Coral</span>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Color Image Results -->
+                <div class="color-image-results" id="color-image-results" style="display:none;">
+                  <div class="color-results-header" id="color-results-header">
+                    <div class="color-results-title-row">
+                      <span class="color-results-swatch" id="color-results-swatch"></span>
+                      <h3 class="color-results-title" id="color-results-title">Results</h3>
+                    </div>
+                    <button class="color-results-close" id="color-results-close" title="Close results">✕</button>
+                  </div>
+                  <div class="color-image-grid" id="color-image-grid">
+                    <!-- Images will be dynamically inserted here -->
+                  </div>
+                  <div class="color-results-loading" id="color-results-loading" style="display:none;">
+                    <div class="color-loading-shimmer"></div>
+                    <div class="color-loading-shimmer"></div>
+                    <div class="color-loading-shimmer"></div>
+                    <div class="color-loading-shimmer"></div>
+                    <div class="color-loading-shimmer"></div>
+                    <div class="color-loading-shimmer"></div>
+                  </div>
+                </div>
+
+                <div id="trend-results">
+                  <!-- Trend results will be displayed here -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Profile View -->
+      <div class="chat-container hidden" id="view-profile">
+        <div class="chat-messages">
+          <div class="chat-messages-inner">
+            <div class="card" style="max-width: 600px; margin: 0 auto;">
+              <div class="card-header">
+                <div class="card-icon">👤</div>
+                <h2 class="card-title">My Fashion Profile</h2>
+              </div>
+              <div class="card-body">
+                <p style="margin-bottom: var(--space-5);">
+                  Help Zephyr understand your style better. This info helps me give you personalized recommendations.
+                </p>
+
+                <div class="tabs">
+                  <button class="tab active" data-tab="basics">Basics</button>
+                  <button class="tab" data-tab="measurements">Measurements</button>
+                  <button class="tab" data-tab="preferences">Preferences</button>
+                  <button class="tab" data-tab="budget">Budget</button>
+                  <button class="tab" data-tab="wardrobe">Wardrobe</button>
+                  <button class="tab" data-tab="memory">Memory</button>
+                </div>
+
+                <!-- Basics Tab -->
+                <div class="tab-content active" id="tab-basics">
+                  <div class="form-group">
+                    <label class="form-label">Your Name</label>
+                    <input type="text" class="form-input" id="profile-name" placeholder="How should I call you?">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Gender</label>
+                    <select class="form-select" id="profile-gender">
+                      <option value="">Select...</option>
+                      <option value="male">Male</option>
+                      <option value="female">Female</option>
+                      <option value="non-binary">Non-binary</option>
+                      <option value="prefer-not">Prefer not to say</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Age Range</label>
+                    <select class="form-select" id="profile-age">
+                      <option value="">Select...</option>
+                      <option value="18-24">18-24</option>
+                      <option value="25-34">25-34</option>
+                      <option value="35-44">35-44</option>
+                      <option value="45-54">45-54</option>
+                      <option value="55+">55+</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Location / Climate</label>
+                    <select class="form-select" id="profile-climate">
+                      <option value="">Select...</option>
+                      <option value="tropical">Tropical (Hot & Humid)</option>
+                      <option value="dry">Dry / Arid</option>
+                      <option value="temperate">Temperate (4 Seasons)</option>
+                      <option value="cold">Cold Climate</option>
+                      <option value="mediterranean">Mediterranean</option>
+                    </select>
+                  </div>
+                </div>
+
+                <!-- Measurements Tab -->
+                <div class="tab-content" id="tab-measurements">
+                  <div class="form-group">
+                    <label class="form-label">Height</label>
+                    <div class="form-input-group">
+                      <input type="number" class="form-input" id="profile-height" placeholder="e.g., 175">
+                      <select class="form-select" id="profile-height-unit" style="max-width: 100px;">
+                        <option value="cm">cm</option>
+                        <option value="ft">ft/in</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Weight</label>
+                    <div class="form-input-group">
+                      <input type="number" class="form-input" id="profile-weight" placeholder="e.g., 70">
+                      <select class="form-select" id="profile-weight-unit" style="max-width: 100px;">
+                        <option value="kg">kg</option>
+                        <option value="lbs">lbs</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Chest / Bust (cm/in)</label>
+                    <input type="number" class="form-input" id="profile-chest" placeholder="e.g., 96">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Waist (cm/in)</label>
+                    <input type="number" class="form-input" id="profile-waist" placeholder="e.g., 80">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Hips (cm/in)</label>
+                    <input type="number" class="form-input" id="profile-hips" placeholder="e.g., 100">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Shoe Size</label>
+                    <div class="form-input-group">
+                      <input type="text" class="form-input" id="profile-shoe" placeholder="e.g., 42 or 9">
+                      <select class="form-select" id="profile-shoe-system" style="max-width: 100px;">
+                        <option value="eu">EU</option>
+                        <option value="us">US</option>
+                        <option value="uk">UK</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Preferences Tab -->
+                <div class="tab-content" id="tab-preferences">
+                  <div class="form-group">
+                    <label class="form-label">Style Preferences</label>
+                    <div class="form-checkbox-group">
+                      <label class="form-checkbox">
+                        <input type="checkbox" name="style-pref" value="casual">
+                        <span class="form-checkbox-label">Casual</span>
+                      </label>
+                      <label class="form-checkbox">
+                        <input type="checkbox" name="style-pref" value="formal">
+                        <span class="form-checkbox-label">Formal</span>
+                      </label>
+                      <label class="form-checkbox">
+                        <input type="checkbox" name="style-pref" value="streetwear">
+                        <span class="form-checkbox-label">Streetwear</span>
+                      </label>
+                      <label class="form-checkbox">
+                        <input type="checkbox" name="style-pref" value="minimalist">
+                        <span class="form-checkbox-label">Minimalist</span>
+                      </label>
+                      <label class="form-checkbox">
+                        <input type="checkbox" name="style-pref" value="bohemian">
+                        <span class="form-checkbox-label">Bohemian</span>
+                      </label>
+                      <label class="form-checkbox">
+                        <input type="checkbox" name="style-pref" value="vintage">
+                        <span class="form-checkbox-label">Vintage</span>
+                      </label>
+                      <label class="form-checkbox">
+                        <input type="checkbox" name="style-pref" value="athleisure">
+                        <span class="form-checkbox-label">Athleisure</span>
+                      </label>
+                      <label class="form-checkbox">
+                        <input type="checkbox" name="style-pref" value="preppy">
+                        <span class="form-checkbox-label">Preppy</span>
+                      </label>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Favorite Colors</label>
+                    <div class="form-checkbox-group">
+                      <label class="form-checkbox" style="--checkbox-color: #18181b;">
+                        <input type="checkbox" name="fav-color" value="black">
+                        <span class="form-checkbox-label">Black</span>
+                      </label>
+                      <label class="form-checkbox">
+                        <input type="checkbox" name="fav-color" value="white">
+                        <span class="form-checkbox-label">White</span>
+                      </label>
+                      <label class="form-checkbox">
+                        <input type="checkbox" name="fav-color" value="navy">
+                        <span class="form-checkbox-label">Navy</span>
+                      </label>
+                      <label class="form-checkbox">
+                        <input type="checkbox" name="fav-color" value="gray">
+                        <span class="form-checkbox-label">Gray</span>
+                      </label>
+                      <label class="form-checkbox">
+                        <input type="checkbox" name="fav-color" value="earth-tones">
+                        <span class="form-checkbox-label">Earth Tones</span>
+                      </label>
+                      <label class="form-checkbox">
+                        <input type="checkbox" name="fav-color" value="pastels">
+                        <span class="form-checkbox-label">Pastels</span>
+                      </label>
+                      <label class="form-checkbox">
+                        <input type="checkbox" name="fav-color" value="bold">
+                        <span class="form-checkbox-label">Bold Colors</span>
+                      </label>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Occupation / Lifestyle</label>
+                    <select class="form-select" id="profile-occupation">
+                      <option value="">Select...</option>
+                      <option value="corporate">Corporate / Office</option>
+                      <option value="creative">Creative Industry</option>
+                      <option value="tech">Tech / Startup</option>
+                      <option value="healthcare">Healthcare</option>
+                      <option value="education">Education</option>
+                      <option value="freelance">Freelance / Remote</option>
+                      <option value="student">Student</option>
+                      <option value="other">Other</option>
+                    </select>
+                  </div>
+                </div>
+
+                <!-- Budget Tab -->
+                <div class="tab-content" id="tab-budget">
+                  <div class="form-group">
+                    <label class="form-label">Currency</label>
+                    <select class="form-select" id="profile-currency">
+                      <option value="USD">USD ($)</option>
+                      <option value="EUR">EUR (€)</option>
+                      <option value="GBP">GBP (£)</option>
+                      <option value="INR">INR (₹)</option>
+                      <option value="JPY">JPY (¥)</option>
+                      <option value="CNY">CNY (¥)</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Budget Range for Individual Items</label>
+                    <div class="form-input-group">
+                      <input type="number" class="form-input" id="profile-budget-min" placeholder="Min">
+                      <span style="color: var(--text-tertiary);">to</span>
+                      <input type="number" class="form-input" id="profile-budget-max" placeholder="Max">
+                    </div>
+                    <p class="form-hint">This helps me recommend items within your budget</p>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Shopping Preference</label>
+                    <div class="form-checkbox-group">
+                      <label class="form-checkbox">
+                        <input type="checkbox" name="shop-pref" value="thrift">
+                        <span class="form-checkbox-label">Thrift/Vintage</span>
+                      </label>
+                      <label class="form-checkbox">
+                        <input type="checkbox" name="shop-pref" value="fast-fashion">
+                        <span class="form-checkbox-label">Fast Fashion</span>
+                      </label>
+                      <label class="form-checkbox">
+                        <input type="checkbox" name="shop-pref" value="mid-range">
+                        <span class="form-checkbox-label">Mid-Range</span>
+                      </label>
+                      <label class="form-checkbox">
+                        <input type="checkbox" name="shop-pref" value="designer">
+                        <span class="form-checkbox-label">Designer</span>
+                      </label>
+                      <label class="form-checkbox">
+                        <input type="checkbox" name="shop-pref" value="sustainable">
+                        <span class="form-checkbox-label">Sustainable</span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Memory Tab -->
+                <div class="tab-content" id="tab-memory">
+                  <div class="memory-panel">
+                    <div class="memory-panel-header">
+                      <div>
+                        <h3 class="memory-title">Remembered Style</h3>
+                        <p class="memory-subtitle">Edit what Zephyr uses for long-term personalization.</p>
+                      </div>
+                      <span class="memory-pill" id="memory-count">0 signals</span>
+                    </div>
+
+                    <div class="form-group">
+                      <label class="form-label">Style Signals</label>
+                      <textarea class="form-input memory-textarea" id="memory-styleSignals"
+                        placeholder="One memory per line, e.g. prefers clean styling over flashy looks"></textarea>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">Likes</label>
+                      <textarea class="form-input memory-textarea" id="memory-likes"
+                        placeholder="One liked preference per line"></textarea>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label">Avoids / Dislikes</label>
+                      <textarea class="form-input memory-textarea" id="memory-dislikes"
+                        placeholder="One avoided style per line"></textarea>
+                    </div>
+
+                    <div class="memory-grid">
+                      <div class="form-group">
+                        <label class="form-label">Colors</label>
+                        <input type="text" class="form-input" id="memory-colors"
+                          placeholder="black, navy, olive">
+                      </div>
+                      <div class="form-group">
+                        <label class="form-label">Occasions</label>
+                        <input type="text" class="form-input" id="memory-occasions"
+                          placeholder="presentation, college, interview">
+                      </div>
+                    </div>
+
+                    <div class="memory-actions">
+                      <button class="btn btn-secondary" id="btn-export-profile">Export Profile</button>
+                      <button class="btn btn-secondary" id="btn-clear-memory">Clear Memory</button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Wardrobe Tab -->
+                <div class="tab-content" id="tab-wardrobe">
+                  <div class="wardrobe-panel">
+                    <div class="memory-panel-header">
+                      <div>
+                        <h3 class="memory-title">Wardrobe Vault</h3>
+                        <p class="memory-subtitle">Save clothes you already own so Zephyr recommends real outfits, not imaginary ones.</p>
+                      </div>
+                      <span class="memory-pill" id="wardrobe-count">0 items</span>
+                    </div>
+                    <div class="wardrobe-form">
+                      <input type="text" class="form-input" id="wardrobe-item-name" placeholder="Item, e.g. black shirt">
+                      <input type="text" class="form-input" id="wardrobe-item-meta" placeholder="Color / fit / note">
+                      <select class="form-select" id="wardrobe-item-type">
+                        <option value="top">Top</option>
+                        <option value="bottom">Bottom</option>
+                        <option value="shoes">Shoes</option>
+                        <option value="outerwear">Outerwear</option>
+                        <option value="accessory">Accessory</option>
+                      </select>
+                      <button class="btn btn-secondary" id="btn-add-wardrobe" type="button">Add Item</button>
+                    </div>
+                    <div class="wardrobe-list" id="wardrobe-list"></div>
+                  </div>
+                </div>
+
+                <button class="btn btn-primary mt-4" id="btn-save-profile" style="width: 100%;">
+                  Save Profile
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Style DNA View -->
+      <div class="chat-container hidden" id="view-dna">
+        <div class="chat-messages">
+          <div class="chat-messages-inner style-dna-view">
+            <section class="dna-hero">
+              <div>
+                <span class="fun-kicker">Personal fashion intelligence</span>
+                <h2 class="fun-title">Style DNA</h2>
+                <p class="fun-copy">Zephyr converts profile, memory, and wardrobe into a structured fashion identity the user can actually understand.</p>
+              </div>
+              <button class="btn btn-primary" id="btn-dna-decision" type="button">Ask for Best Outfit</button>
+            </section>
+
+            <section class="dna-grid">
+              <article class="dna-card core">
+                <span class="dna-label">Core Vibe</span>
+                <strong id="dna-core-vibe">Learning your style</strong>
+                <p id="dna-signature">Add preferences or use demo mode to generate a signature formula.</p>
+              </article>
+              <article class="dna-card">
+                <span class="dna-label">Confidence Type</span>
+                <strong id="dna-confidence">Quiet confidence</strong>
+              </article>
+              <article class="dna-card">
+                <span class="dna-label">Color Base</span>
+                <div class="dna-tags" id="dna-colors"></div>
+              </article>
+              <article class="dna-card">
+                <span class="dna-label">Avoids</span>
+                <div class="dna-tags" id="dna-avoids"></div>
+              </article>
+              <article class="dna-card">
+                <span class="dna-label">Best Occasions</span>
+                <div class="dna-tags" id="dna-occasions"></div>
+              </article>
+              <article class="dna-card">
+                <span class="dna-label">Wardrobe Readiness</span>
+                <strong id="dna-wardrobe-score">0 items</strong>
+                <p id="dna-wardrobe-note">Add owned pieces in Wardrobe Vault for realistic outfit decisions.</p>
+              </article>
+            </section>
+
+            <section class="decision-preview">
+              <div class="decision-header">
+                <h3>Outfit Decision Engine</h3>
+                <span>Ranked choices + reasons + what to avoid</span>
+              </div>
+              <div class="decision-columns">
+                <div class="decision-card winner">
+                  <span>Best Choice</span>
+                  <p id="decision-best">Dark base, clean shoes, one polished detail.</p>
+                </div>
+                <div class="decision-card">
+                  <span>Safe Alternative</span>
+                  <p id="decision-safe">Calmer colors and softer contrast for approachable moments.</p>
+                </div>
+                <div class="decision-card avoid">
+                  <span>Avoid Today</span>
+                  <p id="decision-avoid">Anything too loud for the occasion or outside your stated taste.</p>
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
+      </div>
+
+      <!-- Avatar View -->
+      <div class="chat-container hidden" id="view-avatar">
+        <div class="avatar-window">
+          <!-- Avatar Selector Strip -->
+          <div class="avatar-selector">
+            <button class="avatar-option active" data-avatar="orb" title="Zephyr Core">
+              <span class="avatar-opt-icon">⚡</span><span class="avatar-opt-name">Zephyr</span>
+            </button>
+            <button class="avatar-option" data-avatar="holoM" title="Atlas - Male Hologram">
+              <span class="avatar-opt-icon">👤</span><span class="avatar-opt-name">Atlas</span>
+            </button>
+            <button class="avatar-option" data-avatar="holoF" title="Nova - Female Hologram">
+              <span class="avatar-opt-icon">👩</span><span class="avatar-opt-name">Nova</span>
+            </button>
+            <button class="avatar-option" data-avatar="neural" title="Nexus - Neural AI">
+              <span class="avatar-opt-icon">🧠</span><span class="avatar-opt-name">Nexus</span>
+            </button>
+            <button class="avatar-option" data-avatar="prism" title="Prism - Crystal Entity">
+              <span class="avatar-opt-icon">💎</span><span class="avatar-opt-name">Prism</span>
+            </button>
+          </div>
+
+          <!-- Personality Info Widget -->
+          <div class="avatar-personality-widget" id="avatar-personality-widget">
+            <button class="avatar-info-toggle" id="avatar-info-toggle" title="Personality Info">
+              <span>✦</span> Info
+            </button>
+            <div class="avatar-info-panel hidden" id="avatar-info-panel">
+              <div class="avatar-info-header">
+                <span id="avatar-info-name">⚡ Zephyr Core</span>
+                <button class="avatar-info-close" id="avatar-info-close">✕</button>
+              </div>
+              <div class="avatar-info-body">
+                <div class="avatar-info-row"><span class="avatar-info-label">Personality</span><span id="avatar-info-personality">Balanced, confident, fashion-forward</span></div>
+                <div class="avatar-info-row"><span class="avatar-info-label">Voice</span><span id="avatar-info-voice">Medium pitch, steady pace</span></div>
+                <div class="avatar-info-row"><span class="avatar-info-label">Style</span><span id="avatar-info-style">Versatile advisor for all occasions</span></div>
+                <div class="avatar-info-row"><span class="avatar-info-label">Best For</span><span id="avatar-info-best">General style advice & outfit checks</span></div>
+              </div>
+            </div>
+          </div>
+          <!-- Canvas Area -->
+          <div class="avatar-stage">
+            <canvas id="avatar-canvas"></canvas>
+            <div class="avatar-status-bar">
+              <span class="avatar-status-dot"></span>
+              <span id="avatar-status">Ready</span>
+            </div>
+          </div>
+
+          <!-- Response Display -->
+          <div class="avatar-response-area">
+            <p id="avatar-response" class="avatar-response-text">Ask me anything about fashion...</p>
+          </div>
+
+          <!-- Mode Selector -->
+          <div class="avatar-modes">
+            <button class="avatar-mode-btn active" data-mode="stylist">👔 Style Expert</button>
+            <button class="avatar-mode-btn" data-mode="hype">🔥 Hype Coach</button>
+            <button class="avatar-mode-btn" data-mode="zen">🧘 Zen Guide</button>
+            <button class="avatar-mode-btn" data-mode="mysterious">🔮 Mysterious</button>
+            <button class="avatar-mode-btn" data-mode="royal">👑 Royal</button>
+          </div>
+
+          <!-- Quick Prompts -->
+          <div class="avatar-prompts">
+            <button class="avatar-prompt" data-prompt="What should I wear today?">What to wear today?</button>
+            <button class="avatar-prompt" data-prompt="Roast my style sense">Roast my style 🔥</button>
+            <button class="avatar-prompt" data-prompt="Give me a confidence boost about my fashion choices">Hype me up 💪</button>
+            <button class="avatar-prompt" data-prompt="Tell me a fashion fact I probably don't know">Fashion fact 🧠</button>
+            <button class="avatar-prompt" data-prompt="What are the top 3 trends right now?">Top trends 📈</button>
+          </div>
+
+          <!-- Input Area -->
+          <div class="avatar-input-area">
+            <button class="avatar-mic-btn" id="avatar-mic-btn" title="Voice Input">🎙️</button>
+            <input type="text" id="avatar-input" class="avatar-input" placeholder="Speak or type to your avatar..." autocomplete="off">
+            <button class="avatar-speak-btn" id="avatar-speak-btn">Speak ✨</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Level Up View -->
+      <div class="chat-container hidden" id="view-levelup">
+        <div class="chat-messages" style="overflow-y:auto">
+          <div class="chat-messages-inner fun-zone">
+            <section class="fun-hero">
+              <div>
+                <span class="fun-kicker">📚 Knowledge is power</span>
+                <h2 class="fun-title">Level Up</h2>
+                <p class="fun-copy">Premium fashion guides crafted by Zephyr AI — master color theory, build capsule wardrobes, decode street style & more.</p>
+              </div>
+              <div class="fun-score-card">
+                <span class="fun-score-label">📖 Guides</span>
+                <strong>7</strong>
+              </div>
+            </section>
+
+            <section class="guides-grid">
+              <div class="guide-card" data-guide="1">
+                <div class="guide-badge">ESSENTIAL</div>
+                <div class="guide-icon">🎨</div>
+                <h3 class="guide-title">Color Psychology</h3>
+                <p class="guide-desc">Master the science of color in fashion — understand undertones, mood effects, and strategic palette building.</p>
+                <div class="guide-meta"><span>12 pages</span><span>Beginner</span></div>
+                <a href="guides/ZephyrAI_01_Color_Psychology.pdf" target="_blank" class="guide-download">📥 Read / Download</a>
+              </div>
+
+              <div class="guide-card" data-guide="2">
+                <div class="guide-badge hot">HOT</div>
+                <div class="guide-icon">🔲</div>
+                <h3 class="guide-title">Color Contrast Guide</h3>
+                <p class="guide-desc">High vs low contrast dressing — learn which combinations flatter your complexion and silhouette.</p>
+                <div class="guide-meta"><span>10 pages</span><span>Intermediate</span></div>
+                <a href="guides/ZephyrAI_02_Color_Contrast_Guide.pdf" target="_blank" class="guide-download">📥 Read / Download</a>
+              </div>
+
+              <div class="guide-card" data-guide="3">
+                <div class="guide-badge">POPULAR</div>
+                <div class="guide-icon">👔</div>
+                <h3 class="guide-title">Capsule Wardrobe</h3>
+                <p class="guide-desc">Build a 30-piece wardrobe that creates 100+ outfits — minimalism meets maximum style impact.</p>
+                <div class="guide-meta"><span>9 pages</span><span>All Levels</span></div>
+                <a href="guides/ZephyrAI_03_Capsule_Wardrobe.pdf" target="_blank" class="guide-download">📥 Read / Download</a>
+              </div>
+
+              <div class="guide-card" data-guide="4">
+                <div class="guide-badge pro">PRO</div>
+                <div class="guide-icon">🧬</div>
+                <h3 class="guide-title">Style DNA</h3>
+                <p class="guide-desc">Decode your personal style identity — body shape, face shape, lifestyle, and signature aesthetic.</p>
+                <div class="guide-meta"><span>10 pages</span><span>Advanced</span></div>
+                <a href="guides/ZephyrAI_04_Style_DNA.pdf" target="_blank" class="guide-download">📥 Read / Download</a>
+              </div>
+
+              <div class="guide-card" data-guide="5">
+                <div class="guide-badge hot">TRENDING</div>
+                <div class="guide-icon">🔥</div>
+                <h3 class="guide-title">Streetwear Bible</h3>
+                <p class="guide-desc">From sneaker culture to layering — the ultimate breakdown of modern streetwear aesthetics.</p>
+                <div class="guide-meta"><span>9 pages</span><span>All Levels</span></div>
+                <a href="guides/ZephyrAI_05_Streetwear_Bible.pdf" target="_blank" class="guide-download">📥 Read / Download</a>
+              </div>
+
+              <div class="guide-card" data-guide="6">
+                <div class="guide-badge">NEW</div>
+                <div class="guide-icon">📈</div>
+                <h3 class="guide-title">Trend Forecast</h3>
+                <p class="guide-desc">What's hot this season and next — runway-to-street translations and emerging micro-trends.</p>
+                <div class="guide-meta"><span>7 pages</span><span>Intermediate</span></div>
+                <a href="guides/ZephyrAI_06_Trend_Forecast.pdf" target="_blank" class="guide-download">📥 Read / Download</a>
+              </div>
+
+              <div class="guide-card" data-guide="7">
+                <div class="guide-badge pro">FORMULA</div>
+                <div class="guide-icon">✨</div>
+                <h3 class="guide-title">Outfit Formula</h3>
+                <p class="guide-desc">Never struggle with "what to wear" again — proven outfit formulas for every occasion and body type.</p>
+                <div class="guide-meta"><span>6 pages</span><span>Beginner</span></div>
+                <a href="guides/ZephyrAI_07_Outfit_Formula.pdf" target="_blank" class="guide-download">📥 Read / Download</a>
+              </div>
+            </section>
+          </div>
+        </div>
+      </div>
+
+      <!-- Fun Zone View -->
+      <div class="chat-container hidden" id="view-fun">
+        <div class="chat-messages" style="overflow-y:auto">
+          <div class="chat-messages-inner fun-zone">
+
+            <!-- Game Selector Grid -->
+            <div id="games-selector">
+              <section class="fun-hero">
+                <div>
+                  <span class="fun-kicker">✨ Reset, play, return better</span>
+                  <h2 class="fun-title">Zen Games</h2>
+                  <p class="fun-copy">Release stress, find calm, feel good. Pick a game below.</p>
+                </div>
+                <div class="fun-score-card">
+                  <span class="fun-score-label">😊 Feel-Good Score</span>
+                  <strong id="fun-score">0</strong>
+                </div>
+              </section>
+
+              <section class="games-grid">
+                <div class="game-card" data-game="smash">
+                  <div class="game-card-icon">🔨</div>
+                  <div class="game-card-name">Stress Smash</div>
+                  <div class="game-card-desc">Smash floating orbs with satisfying explosions</div>
+                </div>
+                <div class="game-card" data-game="piano">
+                  <div class="game-card-icon">🎹</div>
+                  <div class="game-card-name">Zen Piano</div>
+                  <div class="game-card-desc">Play soothing melodies with visual ripples</div>
+                </div>
+                <div class="game-card" data-game="smoke">
+                  <div class="game-card-icon">💨</div>
+                  <div class="game-card-name">Smoke Art</div>
+                  <div class="game-card-desc">Draw flowing colorful smoke with your cursor</div>
+                </div>
+                <div class="game-card" data-game="bubbles">
+                  <div class="game-card-icon">🫧</div>
+                  <div class="game-card-name">Bubble Pop</div>
+                  <div class="game-card-desc">Pop floating bubbles for instant calm</div>
+                </div>
+                <div class="game-card" data-game="breathe">
+                  <div class="game-card-icon">🎨</div>
+                  <div class="game-card-name">Color Breathe</div>
+                  <div class="game-card-desc">Pulsing colors that respond to your touch</div>
+                </div>
+                <div class="game-card" data-game="colormatch">
+                  <div class="game-card-icon">🎯</div>
+                  <div class="game-card-name">Color Match</div>
+                  <div class="game-card-desc">Speed-tap matching colors for dopamine streaks</div>
+                </div>
+                <div class="game-card" data-game="neonbounce">
+                  <div class="game-card-icon">⚡</div>
+                  <div class="game-card-name">Neon Bounce</div>
+                  <div class="game-card-desc">Spawn bouncing neon balls with glowing trails</div>
+                </div>
+                <div class="game-card" data-game="orbit">
+                  <div class="game-card-icon">🔮</div>
+                  <div class="game-card-name">Orbit Spinner</div>
+                  <div class="game-card-desc">Create orbiting planets with mesmerizing trails</div>
+                </div>
+                <div class="game-card" data-game="gravity">
+                  <div class="game-card-icon">✨</div>
+                  <div class="game-card-name">Gravity Wells</div>
+                  <div class="game-card-desc">Create gravity points that pull particle swarms</div>
+                </div>
+                <div class="game-card" data-game="kaleidoscope">
+                  <div class="game-card-icon">🪩</div>
+                  <div class="game-card-name">Kaleidoscope</div>
+                  <div class="game-card-desc">Draw mesmerizing mirrored patterns</div>
+                </div>
+                <div class="game-card" data-game="ripple">
+                  <div class="game-card-icon">🌊</div>
+                  <div class="game-card-name">Ripple Pool</div>
+                  <div class="game-card-desc">Touch a calm water surface to create ripples</div>
+                </div>
+              </section>
+
+              <!-- Trivia Section -->
+              <section class="fun-grid" style="margin-top:24px;">
+                <article class="fun-card">
+                  <div class="fun-card-header">
+                    <span class="fun-icon">❓</span>
+                    <h3>Style Trivia</h3>
+                  </div>
+                  <p class="trivia-text" id="trivia-text">Click next for a sharp fashion fact.</p>
+                  <button class="btn btn-secondary" id="btn-next-trivia">Next Trivia</button>
+                </article>
+                <article class="fun-card">
+                  <div class="fun-card-header">
+                    <span class="fun-icon">⚡</span>
+                    <h3>Style Spark</h3>
+                  </div>
+                  <p class="trivia-text" id="style-spark-text">Generate a tiny styling challenge for today.</p>
+                  <button class="btn btn-secondary" id="btn-style-spark">New Spark</button>
+                </article>
+              </section>
+            </div>
+
+            <!-- Game Arena (hidden by default) -->
+            <div id="games-arena" style="display:none;">
+              <div class="games-topbar">
+                <button class="games-back-btn" id="games-back-btn">← Back</button>
+                <span class="games-active-name" id="games-active-name"></span>
+                <span class="games-score-display" id="games-score"></span>
+              </div>
+              <canvas id="games-canvas"></canvas>
+              <div class="games-piano-keys" id="games-piano-keys" style="display:none;"></div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Settings Modal -->
+  <div class="modal-backdrop" id="modal-backdrop"></div>
+  <div class="modal" id="modal-settings">
+    <div class="modal-header">
+      <h3 class="modal-title">⚙️ Zephyr Settings</h3>
+      <button class="modal-close" id="modal-close">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18" />
+          <line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <!-- Settings Tabs -->
+      <div class="settings-tabs">
+        <button class="settings-tab active" data-tab="general">🎛️ General</button>
+        <button class="settings-tab" data-tab="ai-engine">🤖 AI Engine</button>
+      </div>
+
+      <!-- General Tab -->
+      <div class="settings-panel active" id="tab-general">
+        <div class="setting-row">
+          <div class="setting-info">
+            <span class="setting-label">🌐 Language</span>
+            <span class="setting-desc">Choose your preferred language</span>
+          </div>
+          <select class="form-select-mini" id="setting-language">
+            <option value="en" selected>English</option>
+            <option value="hi">हिंदी (Hindi)</option>
+          </select>
+        </div>
+        <div class="setting-row">
+          <div class="setting-info">
+            <span class="setting-label">🔊 Voice Responses</span>
+            <span class="setting-desc">Read AI responses aloud</span>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="setting-voice">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="setting-row">
+          <div class="setting-info">
+            <span class="setting-label">🎨 Current Theme</span>
+            <span class="setting-desc" id="setting-theme-name">Cosmic Purple</span>
+          </div>
+          <button class="btn-mini" id="btn-open-themes" onclick="ZephyrThemes.toggleWidget(true);document.getElementById('modal-settings')?.classList.remove('active');">Change</button>
+        </div>
+        <div class="setting-row">
+          <div class="setting-info">
+            <span class="setting-label">🗑️ Clear Chat History</span>
+            <span class="setting-desc">Reset all conversations</span>
+          </div>
+          <button class="btn-mini btn-danger" id="btn-clear-all">Clear</button>
+        </div>
+      </div>
+
+      <!-- AI Engine Tab -->
+      <div class="settings-panel" id="tab-ai-engine">
+        <div style="background:linear-gradient(135deg,color-mix(in srgb,var(--primary-500) 10%,transparent),color-mix(in srgb,var(--primary-300) 10%,transparent));border-radius:12px;padding:14px;margin-bottom:16px;border:1px solid color-mix(in srgb,var(--primary-500) 20%,transparent);">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+            <span style="font-size:18px;">🆓</span>
+            <strong style="color:var(--text-primary);font-size:0.85rem;">Free AI Providers</strong>
+          </div>
+          <p style="font-size:12px;color:var(--text-secondary);margin:0;">Pre-configured with Groq. Change only if needed.</p>
+        </div>
+        <div class="form-group">
+          <label class="form-label">AI Provider</label>
+          <select class="form-select" id="setting-provider">
+            <option value="groq">🚀 Groq (Llama 3.3 70B) - 30 req/min FREE</option>
+            <option value="openrouter">🌐 OpenRouter - Free models</option>
+            <option value="cerebras">⚡ Cerebras - 30 req/min FREE</option>
+            <option value="huggingface">🤗 HuggingFace - 300 req/hour FREE</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">AI Model</label>
+          <select class="form-select" id="setting-model"></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">API Key</label>
+          <input type="password" class="form-input" id="setting-api-key" placeholder="Enter your API key...">
+          <p class="form-hint" id="api-key-hint">
+            Get your free key from <a href="https://console.groq.com/keys" target="_blank">Groq Console</a>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" id="btn-cancel-settings">Cancel</button>
+      <button class="btn btn-primary" id="btn-save-settings">Save Settings</button>
+    </div>
+  </div>
+
+  <!-- Sophie AI — Floating Assistant -->
+  <button class="sophie-bubble" id="sophie-bubble" title="Chat with Sophie">🌸</button>
+
+  <div class="sophie-panel" id="sophie-panel">
+    <canvas class="sophie-particles" id="sophie-particles"></canvas>
+
+    <!-- Header -->
+    <div class="sophie-header">
+      <div class="sophie-avatar">🌸</div>
+      <div class="sophie-header-info">
+        <div class="sophie-header-name">Sophie</div>
+        <div class="sophie-header-status">
+          <span class="sophie-status-dot"></span>
+          Always here for you
+        </div>
+      </div>
+      <div class="sophie-header-actions">
+        <button class="sophie-header-btn clear-btn" id="sophie-clear" title="Clear conversation">🗑</button>
+        <button class="sophie-header-close" id="sophie-close" title="Close">✕</button>
+      </div>
+    </div>
+
+    <!-- Welcome -->
+    <div class="sophie-welcome" id="sophie-welcome">
+      <div class="sophie-welcome-icon">🌸</div>
+      <h3>Hey! I'm Sophie</h3>
+      <p>Your personal AI companion. Let's chat about anything — from deep thoughts to silly jokes.</p>
+      <div class="sophie-suggestions">
+        <button class="sophie-suggestion">Tell me a fun fact</button>
+        <button class="sophie-suggestion">I need motivation</button>
+        <button class="sophie-suggestion">Explain quantum physics</button>
+        <button class="sophie-suggestion">Make me laugh</button>
+        <button class="sophie-suggestion">I'm feeling stressed</button>
+      </div>
+    </div>
+
+    <!-- Messages -->
+    <div class="sophie-messages" id="sophie-messages" style="display:none;"></div>
+
+    <!-- Clear Confirm -->
+    <div class="sophie-clear-confirm" id="sophie-clear-confirm">
+      <span>Clear all messages?</span>
+      <button class="sophie-clear-btn confirm" id="sophie-confirm-clear">Clear</button>
+      <button class="sophie-clear-btn cancel" id="sophie-cancel-clear">Cancel</button>
+    </div>
+
+    <!-- Input -->
+    <div class="sophie-input-area">
+      <textarea class="sophie-input" id="sophie-input" placeholder="Talk to Sophie..." rows="1"></textarea>
+      <button class="sophie-send" id="sophie-send" title="Send">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+          stroke-linejoin="round">
+          <line x1="22" y1="2" x2="11" y2="13"></line>
+          <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Scripts -->
+  <script src="utils.js"></script>
+  <script src="user-profile.js"></script>
+  <script src="ai-engine.js"></script>
+  <script src="image-analyzer.js"></script>
+  <script src="trend-explorer.js"></script>
+  <script src="visual-fx.js"></script>
+  <script src="theme-engine.js"></script>
+  <script src="games-engine.js"></script>
+  <script src="fashion-images.js"></script>
+  <script src="avatar-engine.js"></script>
+  <script src="command-palette.js"></script>
+  <script src="app.js"></script>
+  <script src="ambient-player.js"></script>
+  <script src="sophie.js"></script>
+</body>
+
+</html>
